@@ -49,16 +49,16 @@ def scrap_googlebook(url):
     _desc = soup.select('span[jsslot=""]')
     desc = _desc[0].getText()
 
-    if not os.path.exists("images"):
-        os.makedirs("images")
-    tag_cover = soup.find('img', 'T75of h1kAub')
-    cover_link = tag_cover['src']
-    full_path = 'images/' + judul + '.jpg'
-    urllib.request.urlretrieve(cover_link, full_path)
-    loc_file = os.path.splitext('images/'+judul+'.jpg')[0]
-    loc_file_final = loc_file + '.jpg'
-    with open(loc_file_final, 'rb') as f:
-        image = f.read()
+    # if not os.path.exists("images"):
+    #     os.makedirs("images")
+    _cover = soup.find('img', 'T75of h1kAub')
+    cover = _cover['src']
+    # full_path = 'images/' + judul + '.jpg'
+    # urllib.request.urlretrieve(cover_link, full_path)
+    # loc_file = os.path.splitext('images/'+judul+'.jpg')[0]
+    # loc_file_final = loc_file + '.jpg'
+    # with open(loc_file_final, 'rb') as f:
+    #     image = f.read()
     
     halaman = soup.find("div", string='Pages').find_next_sibling().text
     pub_date = ''
@@ -74,7 +74,9 @@ def scrap_googlebook(url):
     
     kompability = soup.find("div", string='Best for').find_next_sibling().text
     
-    genre = soup.find("div", string='Genres').find_next_sibling().text
+    genre_mentah = soup.find("div", string='Genres').find_next_sibling().text
+    genre_semi = genre_mentah.split('/')
+    genre = genre_semi
     
     harga_1 = soup.select('button[class="LkLjZd ScJHi HPiPcc IfEcue"]  meta[itemprop="price"]')[0]['content'].replace('$','')
     harga_2 = float(harga_1) * 14266.00
@@ -88,7 +90,7 @@ def scrap_googlebook(url):
     
 
     book_info = {
-        'Cover':image,
+        'Cover':cover,
         'Judul':judul,
         'Penulis':penulis,
         'Deskripsi':desc,
